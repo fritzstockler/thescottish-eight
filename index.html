@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Scottish Eight — Scotland 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a1a0f;--bg2:#0f2415;--bg3:#162d1c;
+  --gold:#c9a84c;--gold2:#e8c97a;--gold3:#f5e6b8;
+  --green:#1a4a2a;--green2:#2a6040;
+  --text:#e8dfc8;--text2:#b8a878;--text3:#7a6a4a;
+  --red:#e05050;--pos:#4caf7a;
+  --border:rgba(201,168,76,0.25);--border2:rgba(201,168,76,0.15);
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;min-height:100vh;display:flex;flex-direction:column}
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}
+.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:40px 36px;text-align:center;width:320px;box-shadow:0 8px 40px rgba(0,0,0,0.6)}
+.login-crest{font-size:42px;margin-bottom:12px}
+.login-title{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);letter-spacing:2px;margin-bottom:4px}
+.login-sub{font-size:11px;color:var(--text3);letter-spacing:1px;margin-bottom:28px}
+.login-label{font-size:11px;color:var(--text2);letter-spacing:0.5px;margin-bottom:8px;text-align:left}
+.login-input{width:100%;padding:12px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--gold);font-size:22px;font-family:'Cinzel',serif;text-align:center;letter-spacing:8px;margin-bottom:16px;outline:none}
+.login-input:focus{border-color:var(--gold)}
+.login-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0f00;font-size:14px;font-weight:700;font-family:'Cinzel',serif;letter-spacing:1px;border:none;border-radius:6px;cursor:pointer}
+.login-error{font-size:12px;color:#e05050;margin-top:10px;min-height:18px}
+.login-footer{font-size:10px;color:var(--text3);margin-top:20px}
+/* SIDEBAR */
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:180px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+.logo-area{padding:20px 16px;border-bottom:1px solid var(--border);text-align:center}
+.logo-area .crest{font-size:28px;margin-bottom:4px}
+.logo-area h2{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);letter-spacing:1px;line-height:1.3}
+.logo-area p{font-size:10px;color:var(--text3);letter-spacing:0.5px;margin-top:4px}
+.nav{flex:1;padding:12px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;color:var(--text2);font-size:12px;letter-spacing:0.3px;transition:all 0.2s;border-left:3px solid transparent}
+.nav-item:hover{background:var(--bg3);color:var(--gold2)}
+.nav-item.active{background:var(--green);color:var(--gold);border-left:3px solid var(--gold)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border);text-align:center}
+.sidebar-footer p{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);opacity:0.7}
+.sidebar-footer small{font-size:10px;color:var(--text3)}
+/* MAIN */
+.main{margin-left:180px;min-height:100vh;display:flex;flex-direction:column}
+/* TOPBAR */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title h1{font-family:'Cinzel',serif;font-size:20px;color:var(--gold);letter-spacing:2px}
+.topbar-title p{font-size:10px;color:var(--text3);letter-spacing:1px}
+.topbar-widgets{display:flex;gap:12px}
+.widget-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 14px;text-align:center;min-width:100px}
+.widget-box .wlabel{font-size:9px;color:var(--text3);letter-spacing:0.5px;text-transform:uppercase}
+.widget-box .wvalue{font-size:20px;font-weight:600;color:var(--gold);font-family:'Cinzel',serif}
+.widget-box .wsub{font-size:9px;color:var(--text2)}
+/* CONTENT */
+.content{flex:1;padding:16px 20px;overflow-y:auto}
+.page{display:none}.page.active{display:block}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+.full-row{margin-bottom:12px}
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.panel-header{background:var(--green);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.panel-header h3{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);letter-spacing:1px;text-transform:uppercase}
+.panel-header span{font-size:10px;color:var(--text2)}
+.panel-body{padding:12px 14px}
+/* TABLES */
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table th{font-size:10px;color:var(--text3);letter-spacing:0.5px;text-align:left;padding:6px 8px;border-bottom:1px solid var(--border2);text-transform:uppercase}
+.lb-table th.center{text-align:center}
+.lb-table td{padding:7px 8px;border-bottom:1px solid var(--border2);color:var(--text);font-size:12px}
+.lb-table tr:last-child td{border-bottom:none}
+.lb-table tr:hover td{background:rgba(201,168,76,0.05)}
+.pos-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:600}
+.pos-1{background:var(--gold);color:#1a0f00}.pos-2{background:#888;color:#fff}.pos-3{background:#8B5A2B;color:#fff}.pos-other{background:var(--bg3);color:var(--text3)}
+.hcp-pill{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:3px}
+.rd-score{text-align:center;font-size:12px;color:var(--text2)}.rd-score.has-score{color:var(--gold2);font-weight:500}
+.total-score{font-weight:600;font-size:14px;color:var(--gold)}
+.dash{color:var(--text3);font-size:11px}
+/* NASSAU */
+.nassau-boxes{display:flex;align-items:center;gap:6px;justify-content:center;margin:10px 0}
+.nassau-box{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:8px 12px;text-align:center;min-width:60px}
+.nassau-box .nval{font-family:'Cinzel',serif;font-size:18px;color:var(--gold)}
+.nassau-box .nlabel{font-size:9px;color:var(--text3);text-transform:uppercase;margin-top:2px}
+.nassau-plus{color:var(--gold);font-size:18px;font-weight:300}
+.nassau-total{text-align:center;font-size:11px;color:var(--text2);margin-top:4px}
+.bet-line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border2);font-size:12px;color:var(--text2)}
+.bet-line:last-child{border-bottom:none}
+.bet-line strong{color:var(--gold2)}
+.sweepstake-badge{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0f00;font-weight:700;padding:3px 10px;border-radius:4px;font-size:13px;font-family:'Cinzel',serif}
+/* SIDE GAMES */
+.sg-title{font-size:10px;color:var(--gold);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border2)}
+.sg-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:11px;color:var(--text2)}
+.sg-hole{background:var(--bg3);padding:2px 7px;border-radius:3px;font-size:10px;color:var(--gold2)}
+/* FINANCIAL */
+.fin-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border2);font-size:12px}
+.fin-row:last-child{border-bottom:none}
+.fin-pos{color:var(--pos);font-weight:600}.fin-neg{color:var(--red);font-weight:600}
+.fin-rank{font-size:10px;color:var(--text3);margin-right:6px}
+.fin-table{width:100%;border-collapse:collapse}
+.fin-table th{font-size:10px;color:var(--text3);padding:6px 8px;border-bottom:1px solid var(--border2);text-align:left;text-transform:uppercase;letter-spacing:0.5px}
+.fin-table td{padding:7px 8px;border-bottom:1px solid var(--border2);font-size:12px}
+.fin-table tr:last-child td{border-bottom:none}
+/* SCHEDULE */
+.sched-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2)}
+.sched-row:last-child{border-bottom:none}
+.sched-rd{width:32px;height:32px;background:var(--green);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:11px;color:var(--gold);flex-shrink:0}
+.sched-date{font-size:10px;color:var(--text3);margin-bottom:2px}
+.sched-course{font-size:13px;color:var(--text);font-weight:500}
+.sched-format{font-size:10px;color:var(--text2)}
+.sched-ctp{margin-left:auto;text-align:right;font-size:10px;color:var(--text3)}
+.sched-ctp span{display:block;color:var(--gold2)}
+/* PLAYERS */
+.player-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.player-avatar{width:44px;height:44px;border-radius:50%;background:var(--green2);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:14px;color:var(--gold)}
+.player-name{font-size:13px;font-weight:500;color:var(--text)}
+.player-hcp{font-size:11px;color:var(--text3)}
+.player-stats-row{display:flex;gap:8px}
+.player-stat{flex:1;background:var(--bg2);border-radius:4px;padding:5px 6px;text-align:center}
+.player-stat .ps-val{font-size:14px;font-weight:600;color:var(--gold)}
+.player-stat .ps-lbl{font-size:9px;color:var(--text3)}
+/* LIVE SCORING */
+.live-round-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.live-tab{padding:5px 12px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);border-radius:4px;cursor:pointer;font-size:11px}
+.live-tab.active{background:var(--green);color:var(--gold);border-color:var(--gold)}
+.score-entry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.score-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px}
+.score-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.score-card-name{font-size:12px;font-weight:500;color:var(--text)}
+.stbl-badge{background:var(--green);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:12px;font-weight:600;color:var(--gold)}
+.holes-grid{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;margin-bottom:6px}
+.hole-label{font-size:9px;color:var(--text3);text-align:center}
+.hole-input{width:100%;padding:3px 1px;text-align:center;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;color:var(--text);font-size:12px}
+.hole-input:focus{outline:none;border-color:var(--gold)}
+.halves-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:5px}
+.half-box{background:var(--bg2);border-radius:3px;padding:4px;text-align:center;font-size:10px;color:var(--text3)}
+.half-box span{display:block;font-size:13px;font-weight:500;color:var(--gold2)}
+.save-btn{width:100%;padding:8px;background:var(--green);border:1px solid var(--gold);border-radius:5px;color:var(--gold);font-size:12px;cursor:pointer;font-weight:500}
+.save-btn:hover{background:var(--green2)}
+/* STATS */
+.stat-bar-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2)}
+.stat-bar-row:last-child{border-bottom:none}
+.stat-name{font-size:12px;color:var(--text);width:160px;flex-shrink:0}
+.stat-bar-wrap{flex:1;background:var(--bg3);border-radius:3px;height:8px;overflow:hidden}
+.stat-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px}
+.stat-val{font-size:12px;color:var(--gold2);width:50px;text-align:right;flex-shrink:0}
+/* SETTLEMENT */
+.settlement-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:8px}
+.settlement-title{font-size:11px;color:var(--gold);margin-bottom:8px;font-weight:500}
+.settlement-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12px;color:var(--text2);border-bottom:1px solid var(--border2)}
+.settlement-row:last-child{border-bottom:none}
+/* NEXT ROUND */
+.next-course{font-family:'Cinzel',serif;font-size:13px;color:var(--gold);margin-bottom:4px}
+.next-info-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:11px;color:var(--text2)}
+.next-info-row svg{width:12px;height:12px;color:var(--gold);flex-shrink:0}
+.btn-gold{display:block;width:100%;margin-top:10px;padding:8px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0f00;font-size:11px;font-weight:600;letter-spacing:0.5px;text-align:center;border:none;border-radius:5px;cursor:pointer;font-family:'Cinzel',serif}
+/* FOOTER */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:10px 20px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--text3)}
+.footer-motto{font-family:'Cinzel',serif;font-size:11px;color:var(--gold);opacity:0.7}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:900px){.sidebar{width:140px}.main{margin-left:140px}.grid-4{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){
+  .sidebar{display:none}.main{margin-left:0}.grid-2,.grid-4{grid-template-columns:1fr}
+  .footer{display:none}
+  .content{padding-bottom:70px}
+  .mobile-nav{display:flex !important}
+}
+/* MOBILE BOTTOM NAV */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:200;padding:6px 0 8px}
+.mobile-nav-items{display:flex;justify-content:space-around;align-items:center}
+.mobile-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;cursor:pointer;color:var(--text3);font-size:9px;letter-spacing:0.3px;border:none;background:none;min-width:44px}
+.mobile-nav-item svg{width:20px;height:20px}
+.mobile-nav-item.active{color:var(--gold)}
+.mobile-nav-more{position:fixed;bottom:60px;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:199;padding:12px 16px;display:none;flex-direction:column;gap:4px}
+.mobile-nav-more.open{display:flex}
+.mobile-more-item{display:flex;align-items:center;gap:12px;padding:10px 12px;color:var(--text2);font-size:13px;cursor:pointer;border-radius:6px}
+.mobile-more-item:hover{background:var(--bg3);color:var(--gold)}
+.mobile-more-item svg{width:18px;height:18px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- NO LOGIN -->
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo-area">
+    <div class="crest">⚜️</div>
+    <h2>THE SCOTTISH<br>EIGHT</h2>
+    <p>INDIVIDUAL STABLEFORD<br>CHAMPIONSHIP</p>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="showPage('home',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>HOME
+    </div>
+    <div class="nav-item" onclick="showPage('leaderboard',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>LEADERBOARD
+    </div>
+    <div class="nav-item" onclick="showPage('live',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>LIVE SCORING
+    </div>
+    <div class="nav-item" onclick="showPage('players',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>PLAYERS
+    </div>
+    <div class="nav-item" onclick="showPage('schedule',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>SCHEDULE
+    </div>
+    <div class="nav-item" onclick="showPage('sidegames',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>SIDE GAMES
+    </div>
+    <div class="nav-item" onclick="showPage('stats',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>STATISTICS
+    </div>
+    <div class="nav-item" onclick="showPage('financials',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>FINANCIALS
+    </div>
+    <div class="nav-item" onclick="showPage('info',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>INFO
+    </div>
+  </div>
+  <div class="sidebar-footer"><p>Scotland 2026</p><small>The Home of Golf</small></div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">
+      <h1>THE SCOTTISH EIGHT</h1>
+      <p>SCOTLAND 2026 · INDIVIDUAL STABLEFORD CHAMPIONSHIP</p>
+    </div>
+    <div class="topbar-widgets">
+      <div class="widget-box">
+        <div class="wlabel">Countdown</div>
+        <div class="wvalue" id="countdown-days">--</div>
+        <div class="wsub">DAYS TO TEE OFF</div>
+      </div>
+      <div class="widget-box">
+        <div class="wlabel">St Andrews</div>
+        <div class="wvalue" id="weather-temp">--°C</div>
+        <div class="wsub" id="weather-wind">⛅ a carregar...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- HOME -->
+    <div id="page-home" class="page active">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><h3>Leaderboard</h3><span>STABLEFORD (NET)</span></div>
+          <div class="panel-body" style="padding:0">
+            <table class="lb-table">
+              <thead><tr><th>Pos</th><th>Player</th><th>HCP</th><th class="center">R1</th><th class="center">R2</th><th class="center">R3</th><th class="center">R4</th><th class="center">R5</th><th class="center">R6</th><th class="center">Total</th></tr></thead>
+              <tbody id="home-lb-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="panel">
+            <div class="panel-header"><h3>Próxima Rodada</h3></div>
+            <div class="panel-body" id="next-round-content"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><h3>Resumo Financeiro</h3><span id="fin-subtitle">Saldo Geral</span></div>
+            <div class="panel-body" id="home-fin-body"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><h3>Side Games</h3></div>
+          <div class="panel-body">
+            <div style="margin-bottom:10px"><div class="sg-title">🎯 Closest to the Pin (R$2 por jogador)</div><div id="sg-ctp-home"></div></div>
+            <div><div class="sg-title">💪 Longest Drive (R$2 por jogador)</div><div id="sg-ld-home"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Estrutura de Apostas</h3></div>
+          <div class="panel-body">
+            <div style="font-size:10px;color:var(--text3);text-align:center;margin-bottom:6px;letter-spacing:0.5px">NASSAU (POR CONFRONTO)</div>
+            <div class="nassau-boxes">
+              <div class="nassau-box"><div class="nval">R$10</div><div class="nlabel">Front 9</div></div>
+              <div class="nassau-plus">+</div>
+              <div class="nassau-box"><div class="nval">R$10</div><div class="nlabel">Back 9</div></div>
+              <div class="nassau-plus">+</div>
+              <div class="nassau-box"><div class="nval">R$40</div><div class="nlabel">Match</div></div>
+            </div>
+            <div class="nassau-total" style="margin-bottom:10px">Total: <strong style="color:var(--gold)">R$60 por confronto</strong></div>
+            <div class="bet-line"><span>Buy-in Principal</span><span class="sweepstake-badge">R$50 por jogador</span></div>
+            <div class="bet-line"><span>Sweepstake por rodada</span><strong>R$400 pote</strong></div>
+            <div class="bet-line"><span>Closest to the Pin</span><strong>R$2 por jogador</strong></div>
+            <div class="bet-line"><span>Longest Drive</span><strong>R$2 por jogador</strong></div>
+            <div class="bet-line" style="border-top:1px solid var(--border);margin-top:4px;padding-top:8px"><span style="color:var(--gold2);font-weight:500">Total em jogo (6 rounds)</span><strong style="color:var(--gold);font-size:14px">R$2.880+</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="page-leaderboard" class="page">
+      <div class="panel full-row">
+        <div class="panel-header"><h3>Leaderboard Completo — The Scottish Eight 2026</h3><span>Stableford Net · 6 Rodadas</span></div>
+        <div class="panel-body" style="padding:0">
+          <table class="lb-table">
+            <thead><tr><th>Pos</th><th>Player</th><th>HCP</th><th class="center">R1<br><small style="font-size:9px;color:var(--text3)">Kingsbarns</small></th><th class="center">R2<br><small style="font-size:9px;color:var(--text3)">Kingsbarns</small></th><th class="center">R3<br><small style="font-size:9px;color:var(--text3)">Jubilee</small></th><th class="center">R4<br><small style="font-size:9px;color:var(--text3)">Old Course</small></th><th class="center">R5<br><small style="font-size:9px;color:var(--text3)">Panmure</small></th><th class="center">R6<br><small style="font-size:9px;color:var(--text3)">Dumbarnie</small></th><th class="center">Total</th><th class="center">Rds</th><th class="center">Média</th></tr></thead>
+            <tbody id="full-lb-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVE SCORING -->
+    <div id="page-live" class="page">
+      <div class="live-round-tabs" id="live-round-tabs"></div>
+      <div id="live-course-info" style="margin-bottom:10px"></div>
+      <div class="panel full-row" style="margin-bottom:12px">
+        <div class="panel-header"><h3>🤝 Confrontos da Rodada</h3><span>Campo livre — cada um aposta com quem quiser</span></div>
+        <div class="panel-body">
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px">
+            <select id="cf-player1" style="flex:1;min-width:140px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:5px;font-size:12px">
+              <option value="">Jogador A...</option>
+              <option value="Guilherme Rezende">Guilherme Rezende</option>
+              <option value="Rubens Naves">Rubens Naves</option>
+              <option value="Cacá Teixeira Leite">Cacá Teixeira Leite</option>
+              <option value="Patrick Hruby">Patrick Hruby</option>
+              <option value="Ricardo Lisboa">Ricardo Lisboa</option>
+              <option value="Fritz Stockler">Fritz Stockler</option>
+              <option value="Claudio Rodriguez">Claudio Rodriguez</option>
+              <option value="Ricardo Campos">Ricardo Campos</option>
+            </select>
+            <span style="color:var(--gold);font-size:16px;font-weight:300">vs</span>
+            <select id="cf-player2" style="flex:1;min-width:140px;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:5px;font-size:12px">
+              <option value="">Jogador B...</option>
+              <option value="Guilherme Rezende">Guilherme Rezende</option>
+              <option value="Rubens Naves">Rubens Naves</option>
+              <option value="Cacá Teixeira Leite">Cacá Teixeira Leite</option>
+              <option value="Patrick Hruby">Patrick Hruby</option>
+              <option value="Ricardo Lisboa">Ricardo Lisboa</option>
+              <option value="Fritz Stockler">Fritz Stockler</option>
+              <option value="Claudio Rodriguez">Claudio Rodriguez</option>
+              <option value="Ricardo Campos">Ricardo Campos</option>
+            </select>
+            <button onclick="adicionarConfronto()" style="padding:7px 16px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a0f00;border:none;border-radius:5px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">+ Adicionar</button>
+          </div>
+          <div id="confrontos-lista" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onclick="salvarConfrontos()" style="padding:7px 16px;background:var(--green);border:1px solid var(--border);color:var(--gold);border-radius:5px;font-size:12px;cursor:pointer">💾 Salvar Confrontos</button>
+            <button onclick="limparConfrontos()" style="padding:7px 16px;background:var(--green);border:1px solid var(--border);color:var(--gold);border-radius:5px;font-size:12px;cursor:pointer">🗑️ Limpar Confrontos</button>
+            <span id="confrontos-status" style="font-size:11px;color:var(--text3);align-self:center"></span>
+          </div>
+        </div>
+      </div>
+      <div class="score-entry-grid" id="live-score-grid"></div>
+      <div style="display:flex;gap:10px;max-width:620px;margin:12px auto">
+        <button class="save-btn" style="flex:2" onclick="saveRoundScores()">💾 Salvar Scores desta Rodada</button>
+        <button class="save-btn" style="flex:1" onclick="resetRound()">🗑️ Limpar Rodada</button>
+        <button class="save-btn" style="flex:1" onclick="resetAll()">⚠️ Limpar Tudo</button>
+      </div>
+    </div>
+
+    <!-- PLAYERS -->
+    <div id="page-players" class="page">
+      <div class="grid-4" id="players-grid"></div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div id="page-schedule" class="page">
+      <div class="panel full-row">
+        <div class="panel-header"><h3>Cronograma da Competição</h3><span>1–7 Junho 2026</span></div>
+        <div class="panel-body" id="schedule-body"></div>
+      </div>
+    </div>
+
+    <!-- SIDE GAMES -->
+    <div id="page-sidegames" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><h3>🎯 Closest to the Pin</h3><span>R$2 por jogador · R$16 pote</span></div>
+          <div class="panel-body" id="ctp-full"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>💪 Longest Drive</h3><span>R$2 por jogador · R$16 pote</span></div>
+          <div class="panel-body" id="ld-full"></div>
+        </div>
+      </div>
+      <div class="panel full-row">
+        <div class="panel-header"><h3>Sweepstake</h3><span>R$50 por jogador · R$400 por rodada · R$2.400 total</span></div>
+        <div class="panel-body" id="sweepstake-body"></div>
+      </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <div id="page-stats" class="page">
+      <div class="grid-2">
+        <div class="panel"><div class="panel-header"><h3>Ranking por Pontuação Total</h3></div><div class="panel-body" id="stats-bar"></div></div>
+        <div class="panel"><div class="panel-header"><h3>Média por Rodada</h3></div><div class="panel-body" id="stats-avg"></div></div>
+      </div>
+    </div>
+
+    <!-- FINANCIALS -->
+    <div id="page-financials" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><h3>Money List</h3><span>Saldo completo</span></div>
+          <div class="panel-body" style="padding:0">
+            <table class="fin-table">
+              <thead><tr><th>Pos</th><th>Player</th><th>Ganhos</th><th>Perdas</th><th>Saldo</th></tr></thead>
+              <tbody id="fin-full-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Acerto de Contas</h3><span>Transferências necessárias</span></div>
+          <div class="panel-body" id="settlement-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div id="page-info" class="page">
+      <div class="grid-2">
+        <div class="panel">
+          <div class="panel-header"><h3>Regras do Torneio</h3></div>
+          <div class="panel-body">
+            <div style="line-height:1.9;color:var(--text2);font-size:13px">
+              <p style="color:var(--gold);font-weight:500;margin-bottom:8px">Formato</p>
+              <p>• Individual Stableford Net com handicap WHS</p>
+              <p>• 6 rodadas em 6 campos distintos</p>
+              <p>• 8 jogadores — Grupo Guglielmetti</p>
+              <br>
+              <p style="color:var(--gold);font-weight:500;margin-bottom:8px">Apostas por Rodada</p>
+              <p>• <strong style="color:var(--gold2)">Melhor Ida (F9):</strong> R$10 × confronto</p>
+              <p>• <strong style="color:var(--gold2)">Melhor Volta (B9):</strong> R$10 × confronto</p>
+              <p>• <strong style="color:var(--gold2)">Melhor Jogo:</strong> R$40 × confronto</p>
+              <p>• <strong style="color:var(--gold2)">Sweepstake:</strong> R$50 × 8 = R$400 pote</p>
+              <p>• <strong style="color:var(--gold2)">CTP:</strong> R$2 × 8 = R$16 pote</p>
+              <p>• <strong style="color:var(--gold2)">Longest Drive:</strong> R$2 × 8 = R$16 pote</p>
+              <br>
+              <p style="color:var(--gold);font-weight:500;margin-bottom:8px">Sweepstake</p>
+              <p>• Sorteio antes de cada rodada</p>
+              <p>• Cada jogador recebe outro jogador sorteado</p>
+              <p>• Quem tiver o melhor score ganha o pote de R$400</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h3>Campos e Datas</h3></div>
+          <div class="panel-body">
+            <div style="line-height:1.9;color:var(--text2);font-size:13px">
+              <p style="color:var(--gold);font-weight:500;margin-bottom:8px">Roteiro</p>
+              <p>📅 01/jun — Chegada</p>
+              <p>⛳ 02/jun — Kingsbarns Golf Links (R1) · 11:30 · 11:40</p>
+              <p>⛳ 03/jun — Kingsbarns Golf Links (R2) · 10:20 · 10:30</p>
+              <p>⛳ 04/jun — St Andrews Jubilee Course (R3) · 15:12 · 15:20</p>
+              <p>⛳ 05/jun — St Andrews Old Course (R4) · 09:50 · 10:00</p>
+              <p>⛳ 06/jun — Panmure Golf Club (R5) · 14:00 · 14:10</p>
+              <p>⛳ 07/jun — Dumbarnie Golf Links (R6) · 08:40 · 08:50</p>
+              <br>
+              <p style="color:var(--gold);font-weight:500;margin-bottom:8px">Valores em Reais (R$)</p>
+              <p>• Todos os valores são em BRL (R$)</p>
+              <p>• Acerto de contas ao final da viagem</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">
+    <span>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Tradição. Amizade. Competição. Six Iconic Courses. One Unforgettable Week.</span>
+    <span class="footer-motto">The Scottish Eight</span>
+    <span>Play Hard. Respect the Links. Enjoy Scotland. 🏌️</span>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-items">
+    <button class="mobile-nav-item active" id="mob-home" onclick="showPageMobile('home',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>HOME
+    </button>
+    <button class="mobile-nav-item" id="mob-leaderboard" onclick="showPageMobile('leaderboard',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>RANKING
+    </button>
+    <button class="mobile-nav-item" id="mob-live" onclick="showPageMobile('live',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>SCORING
+    </button>
+    <button class="mobile-nav-item" id="mob-financials" onclick="showPageMobile('financials',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>MONEY
+    </button>
+    <button class="mobile-nav-item" id="mob-more" onclick="toggleMoreMenu()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>MAIS
+    </button>
+  </div>
+</div>
+
+<!-- MOBILE MORE MENU -->
+<div class="mobile-nav-more" id="mobile-more-menu">
+  <div class="mobile-more-item" onclick="showPageMobile('players',null);toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Players
+  </div>
+  <div class="mobile-more-item" onclick="showPageMobile('schedule',null);toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Schedule
+  </div>
+  <div class="mobile-more-item" onclick="showPageMobile('sidegames',null);toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Side Games
+  </div>
+  <div class="mobile-more-item" onclick="showPageMobile('stats',null);toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Statistics
+  </div>
+  <div class="mobile-more-item" onclick="showPageMobile('info',null);toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>Info
+  </div>
+</div>
+
+<script>
+// NO AUTH
+
+// DATA
+var PLAYERS=[
+  {name:"Guilherme Rezende",short:"GR",hcp:7.3},
+  {name:"Rubens Naves",short:"RN",hcp:7.2},
+  {name:"Cacá Teixeira Leite",short:"CT",hcp:8.7},
+  {name:"Patrick Hruby",short:"PH",hcp:8.7},
+  {name:"Ricardo Lisboa",short:"RL",hcp:10.6},
+  {name:"Fritz Stockler",short:"FS",hcp:11.7},
+  {name:"Claudio Rodriguez",short:"CR",hcp:12.6},
+  {name:"Ricardo Campos",short:"RC",hcp:16.7}
+];
+var ROUNDS=[
+  {id:"r1",label:"R1",date:"02/06",course:"Kingsbarns Golf Links",par:72,tee:"11:30 · 11:40",ctp:{hole:15,par:3},ld:{hole:12,par:5}},
+  {id:"r2",label:"R2",date:"03/06",course:"Kingsbarns Golf Links",par:72,tee:"10:20 · 10:30",ctp:{hole:13,par:3},ld:{hole:6,par:5}},
+  {id:"r3",label:"R3",date:"04/06",course:"St. Andrews Jubilee Course",par:72,tee:"15:12 · 15:20",ctp:{hole:7,par:3},ld:{hole:18,par:5}},
+  {id:"r4",label:"R4",date:"05/06",course:"St. Andrews Old Course",par:72,tee:"09:50 · 10:00",ctp:{hole:8,par:3},ld:{hole:14,par:5}},
+  {id:"r5",label:"R5",date:"06/06",course:"Panmure Golf Club",par:70,tee:"14:00 · 14:10",ctp:{hole:4,par:3},ld:{hole:13,par:5}},
+  {id:"r6",label:"R6",date:"07/06",course:"Dumbarnie Golf Links",par:72,tee:"08:40 · 08:50",ctp:{hole:5,par:3},ld:{hole:13,par:5}}
+];
+
+var scores={};
+var confrontos={};
+var sweepstake={};
+var currentLiveRound="r1";
+
+try{var s=localStorage.getItem('s8_scores');if(s)scores=JSON.parse(s);}catch(e){}
+try{var c=localStorage.getItem('s8_confrontos');if(c)confrontos=JSON.parse(c);}catch(e){}
+try{var sw=localStorage.getItem('s8_sweep');if(sw)sweepstake=JSON.parse(sw);}catch(e){}
+
+function saveData(){
+  try{localStorage.setItem('s8_scores',JSON.stringify(scores));}catch(e){}
+}
+function saveConfrontosStorage(){
+  try{localStorage.setItem('s8_confrontos',JSON.stringify(confrontos));}catch(e){}
+}
+
+function calcStableford(holes,hcp){
+  var pars=[4,4,5,3,4,5,4,3,4,4,4,5,3,4,3,4,4,4];
+  var hcps=[9,17,1,13,5,11,15,7,3,10,16,2,14,6,18,8,12,4];
+  var total=0,ida=0,volta=0;
+  for(var i=0;i<holes.length;i++){
+    if(!holes[i]||holes[i]<=0)continue;
+    var strokes=Math.floor(hcp/18)+(hcps[i]<=(hcp%18)?1:0);
+    var net=holes[i]-strokes;
+    var pts=Math.max(0,(pars[i]-net)+2);
+    total+=pts;
+    if(i<9)ida+=pts;else volta+=pts;
+  }
+  return{total:total,ida:ida,volta:volta};
+}
+
+function getRoundTotals(){
+  var data=PLAYERS.map(function(p){
+    var total=0,rounds=0,rScores=[];
+    ROUNDS.forEach(function(r){
+      var rd=scores[r.id]||{};
+      var hs=rd[p.name]||[];
+      if(hs.some(function(x){return x>0;})){
+        var res=calcStableford(hs,p.hcp);
+        total+=res.total;rounds++;
+        rScores.push(res);
+      }else{rScores.push(null);}
+    });
+    return{name:p.name,hcp:p.hcp,short:p.short,total:total,rounds:rounds,avg:rounds?(total/rounds).toFixed(1):'—',rScores:rScores};
+  });
+  data.sort(function(a,b){return b.total-a.total;});
+  return data;
+}
+
+function calcMoney(){
+  return PLAYERS.map(function(p){
+    var ganhos=0,perdas=0;
+    ROUNDS.forEach(function(r){
+      var rd=scores[r.id]||{};
+      var hasData=PLAYERS.some(function(pl){return(rd[pl.name]||[]).some(function(x){return x>0;});});
+      if(!hasData)return;
+      var cfs=confrontos[r.id]||[];
+      var myCfs=cfs.filter(function(cf){return cf.a===p.name||cf.b===p.name;});
+      if(!myCfs.length)return;
+      myCfs.forEach(function(cf){
+        var opp=cf.a===p.name?cf.b:cf.a;
+        var oppPlayer=PLAYERS.find(function(x){return x.name===opp;});
+        if(!oppPlayer)return;
+        var mine=calcStableford(rd[p.name]||[],p.hcp);
+        var theirs=calcStableford(rd[opp]||[],oppPlayer.hcp);
+        perdas+=60;
+        if(mine.ida>theirs.ida)ganhos+=20;else if(mine.ida===theirs.ida)ganhos+=10;
+        if(mine.volta>theirs.volta)ganhos+=20;else if(mine.volta===theirs.volta)ganhos+=10;
+        if(mine.total>theirs.total)ganhos+=80;else if(mine.total===theirs.total)ganhos+=40;
+      });
+    });
+    return{name:p.name,ganhos:Math.round(ganhos),perdas:Math.round(perdas),saldo:Math.round(ganhos-perdas)};
+  }).sort(function(a,b){return b.saldo-a.saldo;});
+}
+
+function renderHomeLB(){
+  var data=getRoundTotals();
+  var html='';
+  data.forEach(function(p,i){
+    var pc=i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'pos-other';
+    var rdCells='';
+    ROUNDS.forEach(function(_,ri){
+      var rs=p.rScores[ri];
+      rdCells+=rs?'<td class="rd-score has-score">'+rs.total+'</td>':'<td class="rd-score"><span class="dash">–</span></td>';
+    });
+    html+='<tr><td><span class="pos-badge '+pc+'">'+(i+1)+'</span></td><td>'+p.name+'</td><td><span class="hcp-pill">'+p.hcp+'</span></td>'+rdCells+'<td class="total-score">'+(p.total||'—')+'</td></tr>';
+  });
+  document.getElementById('home-lb-body').innerHTML=html;
+}
+
+function renderFullLB(){
+  var data=getRoundTotals();
+  var html='';
+  data.forEach(function(p,i){
+    var pc=i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'pos-other';
+    var rdCells='';
+    ROUNDS.forEach(function(_,ri){
+      var rs=p.rScores[ri];
+      rdCells+=rs?'<td class="rd-score has-score">'+rs.total+'</td>':'<td class="rd-score"><span class="dash">–</span></td>';
+    });
+    html+='<tr><td><span class="pos-badge '+pc+'">'+(i+1)+'</span></td><td>'+p.name+'</td><td><span class="hcp-pill">'+p.hcp+'</span></td>'+rdCells+'<td class="total-score">'+(p.total||'—')+'</td><td style="color:var(--text3)">'+p.rounds+'</td><td style="color:var(--text2)">'+p.avg+'</td></tr>';
+  });
+  document.getElementById('full-lb-body').innerHTML=html;
+}
+
+function renderNextRound(){
+  var nextIdx=0;
+  for(var i=0;i<ROUNDS.length;i++){
+    var rd=scores[ROUNDS[i].id]||{};
+    if(!PLAYERS.some(function(p){return(rd[p.name]||[]).some(function(x){return x>0;});})){nextIdx=i;break;}
+    if(i===ROUNDS.length-1)nextIdx=i;
+  }
+  var r=ROUNDS[nextIdx];
+  document.getElementById('next-round-content').innerHTML='<div style="background:var(--green2);border-radius:5px;height:60px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-family:Cinzel,serif;font-size:12px;color:var(--gold);letter-spacing:1px">⛳ '+r.course+'</div><div style="font-size:10px;color:var(--text3);margin-bottom:4px">Round '+(nextIdx+1)+' de 6</div><div class="next-course">'+r.course+'</div><div class="next-info-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'+r.date+' de Junho de 2026</div><div class="next-info-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>Tee Times: '+r.tee+'</div><div class="next-info-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Formato: Stableford Net · Par '+r.par+'</div><div class="next-info-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>CTP: Bur.'+r.ctp.hole+' · LD: Bur.'+r.ld.hole+'</div>';
+}
+
+function renderHomeFin(){
+  var data=calcMoney();
+  var html='';
+  data.forEach(function(p,i){
+    var cls=p.saldo>=0?'fin-pos':'fin-neg';
+    var sign=p.saldo>=0?'+':'';
+    html+='<div class="fin-row"><span><span class="fin-rank">'+(i+1)+'</span>'+p.name+'</span><span class="'+cls+'">'+sign+'R$'+p.saldo+'</span></div>';
+  });
+  document.getElementById('home-fin-body').innerHTML=html||'<div style="color:var(--text3);font-size:12px">Lance os scores para ver o financeiro</div>';
+}
+
+function renderSideGamesHome(){
+  var ctpHtml='',ldHtml='';
+  ROUNDS.forEach(function(r){
+    var name=r.course.replace('St. Andrews ','St.A. ').replace(' Golf Links','').replace(' Golf Club','');
+    ctpHtml+='<div class="sg-row"><span>'+name+'</span><span class="sg-hole">Bur. '+r.ctp.hole+' · Par '+r.ctp.par+'</span></div>';
+    ldHtml+='<div class="sg-row"><span>'+name+'</span><span class="sg-hole">Bur. '+r.ld.hole+' · Par '+r.ld.par+'</span></div>';
+  });
+  document.getElementById('sg-ctp-home').innerHTML=ctpHtml;
+  document.getElementById('sg-ld-home').innerHTML=ldHtml;
+}
+
+function renderSideGamesFull(){
+  var ctpHtml='',ldHtml='';
+  ROUNDS.forEach(function(r){
+    ctpHtml+='<div style="padding:8px 0;border-bottom:1px solid var(--border2)"><div style="font-size:10px;color:var(--text3);margin-bottom:3px">'+r.label+' · '+r.date+'/2026</div><div style="font-size:13px;color:var(--text)">'+r.course+'</div><div style="display:flex;justify-content:space-between;margin-top:4px"><span class="sg-hole">Buraco '+r.ctp.hole+' · Par '+r.ctp.par+'</span><span style="font-size:11px;color:var(--gold)">Pote: R$16</span></div><div style="margin-top:6px;font-size:11px;color:var(--text3)">Vencedor: <span id="ctp-win-'+r.id+'" style="color:var(--gold2)">'+(scores['ctp_'+r.id]||'—')+'</span><button onclick="setCTPWinner(\''+r.id+'\')" style="margin-left:8px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text2);padding:2px 8px;font-size:10px;cursor:pointer">Registrar</button></div></div>';
+    ldHtml+='<div style="padding:8px 0;border-bottom:1px solid var(--border2)"><div style="font-size:10px;color:var(--text3);margin-bottom:3px">'+r.label+' · '+r.date+'/2026</div><div style="font-size:13px;color:var(--text)">'+r.course+'</div><div style="display:flex;justify-content:space-between;margin-top:4px"><span class="sg-hole">Buraco '+r.ld.hole+' · Par '+r.ld.par+'</span><span style="font-size:11px;color:var(--gold)">Pote: R$16</span></div><div style="margin-top:6px;font-size:11px;color:var(--text3)">Vencedor: <span id="ld-win-'+r.id+'" style="color:var(--gold2)">'+(scores['ld_'+r.id]||'—')+'</span><button onclick="setLDWinner(\''+r.id+'\')" style="margin-left:8px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text2);padding:2px 8px;font-size:10px;cursor:pointer">Registrar</button></div></div>';
+  });
+  document.getElementById('ctp-full').innerHTML=ctpHtml;
+  document.getElementById('ld-full').innerHTML=ldHtml;
+
+  var swHtml='<div style="margin-bottom:12px;color:var(--text2);font-size:13px;line-height:1.7"><strong style="color:var(--gold)">Como funciona:</strong> Antes de cada rodada, sorteio define qual jogador você compra por R$50. Se o jogador sorteado ganhar o round, você leva o pote de <strong style="color:var(--gold2)">R$400</strong>.</div>';
+  ROUNDS.forEach(function(r){
+    swHtml+='<div class="settlement-card"><div class="settlement-title">'+r.label+' · '+r.course+' · '+r.date+'/2026 · Pote: R$400</div>';
+    PLAYERS.forEach(function(p){
+      var sel='<select onchange="saveSweepstake(\''+r.id+'\',\''+p.name+'\',this.value)" style="background:var(--bg2);border:1px solid var(--border);color:var(--text2);padding:3px 6px;border-radius:3px;font-size:11px;flex:1"><option value="">— sorteio pendente —</option>';
+      PLAYERS.forEach(function(p2){
+        var selected=((sweepstake[r.id]||{})[p.name]===p2.name)?'selected':'';
+        sel+='<option value="'+p2.name+'" '+selected+'>'+p2.name+'</option>';
+      });
+      sel+='</select>';
+      swHtml+='<div class="settlement-row"><span style="color:var(--text);min-width:160px">'+p.name+'</span><span style="color:var(--text3)">sorteou →</span>'+sel+'</div>';
+    });
+    swHtml+='</div>';
+  });
+  document.getElementById('sweepstake-body').innerHTML=swHtml;
+}
+
+function setCTPWinner(rid){var n=prompt('Vencedor do CTP:');if(n){scores['ctp_'+rid]=n;saveData();renderSideGamesFull();}}
+function setLDWinner(rid){var n=prompt('Vencedor do Longest Drive:');if(n){scores['ld_'+rid]=n;saveData();renderSideGamesFull();}}
+function saveSweepstake(rid,player,val){
+  if(!sweepstake[rid])sweepstake[rid]={};
+  sweepstake[rid][player]=val;
+  try{localStorage.setItem('s8_sweep',JSON.stringify(sweepstake));}catch(e){}
+}
+
+function renderPlayers(){
+  var data=getRoundTotals();
+  var html='';
+  PLAYERS.forEach(function(p){
+    var d=data.find(function(x){return x.name===p.name;})||{total:0,rounds:0,avg:'—'};
+    html+='<div class="player-card"><div class="player-avatar">'+p.short+'</div><div class="player-name">'+p.name+'</div><div class="player-hcp">HCP Index: '+p.hcp+'</div><div class="player-stats-row"><div class="player-stat"><div class="ps-val">'+(d.total||0)+'</div><div class="ps-lbl">Pts Total</div></div><div class="player-stat"><div class="ps-val">'+(d.rounds||0)+'</div><div class="ps-lbl">Rounds</div></div><div class="player-stat"><div class="ps-val">'+d.avg+'</div><div class="ps-lbl">Média</div></div></div></div>';
+  });
+  document.getElementById('players-grid').innerHTML=html;
+}
+
+function renderSchedule(){
+  var html='';
+  ROUNDS.forEach(function(r,i){
+    html+='<div class="sched-row"><div class="sched-rd">'+r.label+'</div><div style="width:48px;height:36px;border-radius:4px;background:var(--green2);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:16px;flex-shrink:0">⛳</div><div style="flex:1"><div class="sched-date">'+r.date+' de Junho de 2026</div><div class="sched-course">'+r.course+'</div><div class="sched-format">Stableford Net · Par '+r.par+' · Tee: '+r.tee+'</div></div><div class="sched-ctp"><span>CTP: Bur.'+r.ctp.hole+'</span><span>LD: Bur.'+r.ld.hole+'</span></div></div>';
+  });
+  document.getElementById('schedule-body').innerHTML=html;
+}
+
+function renderStats(){
+  var data=getRoundTotals();
+  var maxPts=Math.max.apply(null,data.map(function(d){return d.total;}));
+  maxPts=maxPts||1;
+  var html='';
+  data.forEach(function(p){
+    html+='<div class="stat-bar-row"><div class="stat-name">'+p.name+'</div><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:'+Math.round(p.total/maxPts*100)+'%"></div></div><div class="stat-val">'+p.total+'</div></div>';
+  });
+  document.getElementById('stats-bar').innerHTML=html||'<div style="color:var(--text3)">Sem scores ainda</div>';
+  var maxAvg=Math.max.apply(null,data.map(function(d){return parseFloat(d.avg)||0;}));
+  maxAvg=maxAvg||1;
+  var html2='';
+  data.forEach(function(p){
+    html2+='<div class="stat-bar-row"><div class="stat-name">'+p.name+'</div><div class="stat-bar-wrap"><div class="stat-bar-fill" style="width:'+Math.round((parseFloat(p.avg)||0)/maxAvg*100)+'%;background:linear-gradient(90deg,#4caf7a,#9FE1CB)"></div></div><div class="stat-val">'+p.avg+'</div></div>';
+  });
+  document.getElementById('stats-avg').innerHTML=html2||'<div style="color:var(--text3)">Sem scores ainda</div>';
+}
+
+function renderFinancials(){
+  var data=calcMoney();
+  var html='';
+  data.forEach(function(p,i){
+    var cls=p.saldo>=0?'fin-pos':'fin-neg';
+    var sign=p.saldo>=0?'+':'';
+    html+='<tr><td>'+(i+1)+'</td><td>'+p.name+'</td><td style="color:var(--pos)">R$'+p.ganhos+'</td><td style="color:var(--red)">R$'+p.perdas+'</td><td class="'+cls+'">'+sign+'R$'+p.saldo+'</td></tr>';
+  });
+  document.getElementById('fin-full-body').innerHTML=html;
+  var winners=data.filter(function(d){return d.saldo>0;});
+  var losers=data.filter(function(d){return d.saldo<0;});
+  var settlements=[];
+  var wCopy=winners.map(function(w){return{name:w.name,saldo:w.saldo};});
+  losers.forEach(function(l){
+    var rem=-l.saldo;
+    wCopy.forEach(function(w){
+      if(rem<=0||w.saldo<=0)return;
+      var amt=Math.min(rem,w.saldo);
+      settlements.push({from:l.name,to:w.name,amt:Math.round(amt)});
+      rem-=amt;w.saldo-=amt;
+    });
+  });
+  var sHtml=settlements.length?settlements.map(function(s){return'<div class="settlement-card"><div class="settlement-row"><span style="color:var(--red)">'+s.from+'</span><span style="color:var(--gold)">→</span><span style="color:var(--pos)">'+s.to+'</span><span style="margin-left:auto;color:var(--gold);font-weight:600">R$'+s.amt+'</span></div></div>';}).join(''):'<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">Nenhuma transferência necessária ainda</div>';
+  document.getElementById('settlement-body').innerHTML=sHtml;
+}
+
+// CONFRONTOS
+function renderConfrontos(){
+  var rid=currentLiveRound;
+  var lista=confrontos[rid]||[];
+  var el=document.getElementById('confrontos-lista');
+  if(!el)return;
+  if(!lista.length){el.innerHTML='<div style="color:var(--text3);font-size:12px;padding:8px 0">Nenhum confronto registrado ainda.</div>';return;}
+  var html='';
+  lista.forEach(function(cf,i){
+    html+='<div style="display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:7px 12px"><span style="font-size:12px;color:var(--text);flex:1">'+cf.a+'</span><span style="color:var(--gold);font-size:13px">vs</span><span style="font-size:12px;color:var(--text);flex:1;text-align:right">'+cf.b+'</span><button onclick="removerConfronto('+i+')" style="background:none;border:none;color:rgba(224,80,80,0.7);cursor:pointer;font-size:16px;padding:0 4px">×</button></div>';
+  });
+  document.getElementById('confrontos-lista').innerHTML=html;
+  document.getElementById('confrontos-status').textContent=lista.length+' confronto'+(lista.length>1?'s':'')+' registrado'+(lista.length>1?'s':'');
+}
+
+function adicionarConfronto(){
+  var a=document.getElementById('cf-player1').value;
+  var b=document.getElementById('cf-player2').value;
+  if(!a||!b){alert('Selecione os dois jogadores.');return;}
+  if(a===b){alert('Selecione jogadores diferentes.');return;}
+  var rid=currentLiveRound;
+  if(!confrontos[rid])confrontos[rid]=[];
+  var jaExiste=confrontos[rid].some(function(cf){return(cf.a===a&&cf.b===b)||(cf.a===b&&cf.b===a);});
+  if(jaExiste){alert('Este confronto já foi registrado.');return;}
+  confrontos[rid].push({a:a,b:b});
+  document.getElementById('cf-player1').value='';
+  document.getElementById('cf-player2').value='';
+  renderConfrontos();
+}
+
+function removerConfronto(idx){
+  confrontos[currentLiveRound].splice(idx,1);
+  renderConfrontos();
+}
+
+function salvarConfrontos(){
+  saveConfrontosStorage();
+  document.getElementById('confrontos-status').textContent='✅ Confrontos salvos!';
+  renderMoney&&renderMoney();
+  renderFinancials();
+}
+
+function limparConfrontos(){
+  if(!confirm('Limpar todos os confrontos desta rodada?'))return;
+  confrontos[currentLiveRound]=[];
+  saveConfrontosStorage();
+  renderConfrontos();
+}
+
+// LIVE SCORING
+function renderLiveTabs(){
+  var html='';
+  ROUNDS.forEach(function(r){
+    html+='<button class="live-tab'+(r.id===currentLiveRound?' active':'')+'" onclick="setLiveRound(\''+r.id+'\')">'+r.label+' · '+r.date+'</button>';
+  });
+  document.getElementById('live-round-tabs').innerHTML=html;
+  var r=ROUNDS.find(function(x){return x.id===currentLiveRound;});
+  document.getElementById('live-course-info').innerHTML='<div class="panel" style="display:inline-block;padding:8px 14px;font-size:12px"><strong style="color:var(--gold)">'+r.course+'</strong><span style="color:var(--text3);margin-left:12px">CTP: Bur.'+r.ctp.hole+'</span><span style="color:var(--text3);margin-left:12px">LD: Bur.'+r.ld.hole+'</span><span style="color:var(--text3);margin-left:12px">Tee: '+r.tee+'</span></div>';
+  var rd=scores[currentLiveRound]||{};
+  var html2='';
+  PLAYERS.forEach(function(p,pi){
+    var saved=rd[p.name]||[];
+    while(saved.length<18)saved.push(0);
+    var res=calcStableford(saved,p.hcp);
+    var labels='',inputs='';
+    for(var h=0;h<18;h++){
+      labels+='<div class="hole-label">'+(h+1)+'</div>';
+      inputs+='<input class="hole-input" type="number" min="1" max="12" value="'+(saved[h]||'')+'" placeholder="'+(h+1)+'" id="lv'+pi+'h'+h+'" onchange="liveRecalc('+pi+')">';
+    }
+    html2+='<div class="score-card"><div class="score-card-header"><div class="score-card-name">'+p.name+' <span class="hcp-pill">'+p.hcp+'</span></div><div class="stbl-badge" id="live-stbl-'+pi+'">'+res.total+' pts</div></div><div class="holes-grid">'+labels+inputs+'</div><div class="halves-row"><div class="half-box">Front 9<span id="live-ida-'+pi+'">'+res.ida+'</span></div><div class="half-box">Back 9<span id="live-volta-'+pi+'">'+res.volta+'</span></div></div></div>';
+  });
+  document.getElementById('live-score-grid').innerHTML=html2;
+}
+
+function setLiveRound(id){currentLiveRound=id;renderLiveTabs();renderConfrontos();}
+
+function liveRecalc(pi){
+  var p=PLAYERS[pi];
+  var holes=[];
+  for(var h=0;h<18;h++){holes.push(parseInt(document.getElementById('lv'+pi+'h'+h).value)||0);}
+  var res=calcStableford(holes,p.hcp);
+  document.getElementById('live-stbl-'+pi).textContent=res.total+' pts';
+  document.getElementById('live-ida-'+pi).textContent=res.ida;
+  document.getElementById('live-volta-'+pi).textContent=res.volta;
+}
+
+function saveRoundScores(){
+  if(!scores[currentLiveRound])scores[currentLiveRound]={};
+  PLAYERS.forEach(function(p,pi){
+    var holes=[];
+    for(var h=0;h<18;h++){holes.push(parseInt(document.getElementById('lv'+pi+'h'+h).value)||0);}
+    scores[currentLiveRound][p.name]=holes;
+  });
+  saveData();
+  renderHomeLB();renderFullLB();renderHomeFin();renderStats();renderFinancials();renderPlayers();
+  alert('✅ Scores salvos com sucesso!');
+}
+
+function resetRound(){
+  var r=ROUNDS.find(function(x){return x.id===currentLiveRound;});
+  if(!confirm('Limpar todos os scores de '+r.course+'?\nEsta ação não pode ser desfeita.'))return;
+  delete scores[currentLiveRound];
+  saveData();renderLiveTabs();renderHomeLB();renderFullLB();renderHomeFin();renderStats();renderFinancials();
+  alert('🗑️ Scores da rodada apagados.');
+}
+
+function resetAll(){
+  if(!confirm('⚠️ Limpar TODOS os scores?\nEsta ação não pode ser desfeita.'))return;
+  if(!confirm('Tem certeza? Todos os dados serão perdidos.'))return;
+  scores={};
+  try{localStorage.removeItem('s8_scores');}catch(e){}
+  renderLiveTabs();renderHomeLB();renderFullLB();renderHomeFin();renderStats();renderFinancials();
+  alert('✅ Todos os dados foram apagados.');
+}
+
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  if(id==='live'){renderLiveTabs();renderConfrontos();}
+  if(id==='sidegames')renderSideGamesFull();
+  if(id==='stats')renderStats();
+  if(id==='financials')renderFinancials();
+  if(id==='leaderboard')renderFullLB();
+  if(id==='players')renderPlayers();
+  if(id==='schedule')renderSchedule();
+}
+
+// WEATHER — St Andrews, Scotland
+function fetchWeather(){
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=56.34&longitude=-2.80&current=temperature_2m,weathercode,windspeed_10m,winddirection_10m&wind_speed_unit=kmh&timezone=Europe/London')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var temp=Math.round(d.current.temperature_2m);
+      var wind=Math.round(d.current.windspeed_10m);
+      var dir=d.current.winddirection_10m;
+      var code=d.current.weathercode;
+      var dirs=['N','NE','E','SE','S','SO','O','NO'];
+      var dirName=dirs[Math.round(dir/45)%8];
+      var icons={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',75:'🌨️',80:'🌦️',81:'🌧️',82:'🌧️',95:'⛈️'};
+      var icon=icons[code]||'⛅';
+      document.getElementById('weather-temp').textContent=temp+'°C';
+      document.getElementById('weather-wind').textContent=icon+' '+dirName+' '+wind+'km/h';
+    })
+    .catch(function(){
+      document.getElementById('weather-temp').textContent='--°C';
+      document.getElementById('weather-wind').textContent='⛅ indisponível';
+    });
+}
+
+function showPageMobile(id,el){
+  showPage(id,null);
+  document.querySelectorAll('.mobile-nav-item').forEach(function(n){n.classList.remove('active');});
+  if(el)el.classList.add('active');
+}
+
+function toggleMoreMenu(){
+  var m=document.getElementById('mobile-more-menu');
+  m.classList.toggle('open');
+}
+
+// Close more menu when clicking outside
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('mobile-more-menu');
+  var btn=document.getElementById('mob-more');
+  if(menu&&btn&&!menu.contains(e.target)&&!btn.contains(e.target)){
+    menu.classList.remove('open');
+  }
+});
+
+function countdown(){
+  var tee=new Date('2026-06-02T08:00:00');
+  var now=new Date();
+  var diff=Math.floor((tee-now)/(1000*60*60*24));
+  document.getElementById('countdown-days').textContent=diff>0?diff:'⛳';
+}
+
+// INIT
+countdown();
+fetchWeather();
+renderHomeLB();
+renderFullLB();
+renderNextRound();
+renderHomeFin();
+renderSideGamesHome();
+renderPlayers();
+renderSchedule();
+</script>
+</body>
+</html>
